@@ -40,9 +40,11 @@ export const navbarNavigationItems = [
     icon: "Cpu",
     dropdown: [
       { path: "/performance", label: "Performance Analyzer" },
+      { path: "/analytics", label: "Analytics Dashboard" },
       { path: "/performance/docs", label: "Performance Docs" },
     ],
   },
+  { path: "/analytics", label: "Analytics", icon: "BarChart3" },
   {
     label: "Notes",
     icon: "BookOpen",

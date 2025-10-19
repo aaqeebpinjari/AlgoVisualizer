@@ -48,7 +48,7 @@ const SkeletonLoader = ({ isDark }) => (
     className="skeleton-loader"
     style={{
       background: isDark ? "#23272f" : "#fff",
-      border: `1px solid ${isDark ? "#444" : "#eee"}`,
+      border: `1px solid ${isDark ? "#444" : "#eee"}`
     }}
   >
     <div className="skeleton-header">
@@ -145,7 +145,7 @@ export default function ContributorsLeaderboard() {
   const [stats, setStats] = useState({
     flooredTotalPRs: 0,
     totalContributors: 0,
-    flooredTotalPoints: 0,
+    flooredTotalPoints: 0
   });
   const [searchTerm, setSearchTerm] = useState("");
   const { theme } = useTheme();
@@ -167,14 +167,12 @@ export default function ContributorsLeaderboard() {
           const res = await fetch(url, {
             headers: {
               Accept: "application/vnd.github+json",
-              ...(token ? { Authorization: `Bearer ${token}` } : {}),
-            },
+              ...(token ? { Authorization: `Bearer ${token}` } : {})
+            }
           });
           if (!res.ok) {
             const err = await res.json().catch(() => ({}));
-            setErrorMsg(
-              err?.message || `GitHub API error (status ${res.status})`
-            );
+            setErrorMsg(err?.message || `GitHub API error (status ${res.status})`);
             break;
           }
           const data = await res.json();
@@ -200,7 +198,7 @@ export default function ContributorsLeaderboard() {
                 avatar: `https://github.com/${author}.png`,
                 profile: `https://github.com/${author}`,
                 points: 0,
-                prs: 0,
+                prs: 0
               };
             }
             contributorsMap[author].prs += 1;
@@ -212,10 +210,7 @@ export default function ContributorsLeaderboard() {
 
         const arr = Object.values(contributorsMap);
         const sorted = arr.sort(
-          (a, b) =>
-            b.points - a.points ||
-            b.prs - a.prs ||
-            a.username.localeCompare(b.username)
+          (a, b) => b.points - a.points || b.prs - a.prs || a.username.localeCompare(b.username)
         );
         const ranked = sorted.map((c, i) => ({ ...c, rank: i + 1 }));
         setContributors(ranked);
@@ -225,7 +220,7 @@ export default function ContributorsLeaderboard() {
         setStats({
           flooredTotalPRs: Math.floor(totalPRs / 10) * 10,
           totalContributors: Math.floor(ranked.length / 10) * 10,
-          flooredTotalPoints: Math.floor(totalPoints / 10) * 10,
+          flooredTotalPoints: Math.floor(totalPoints / 10) * 10
         });
 
         if (!errorMsg && ranked.length === 0) {
@@ -262,25 +257,24 @@ export default function ContributorsLeaderboard() {
     cursor: "pointer",
     margin: "0 4px",
     opacity: 1,
-    transition: "opacity 0.2s",
+    transition: "opacity 0.2s"
   };
   const buttonActiveStyle = {
     ...buttonStyle,
     background: isDark ? "#3b82f6" : "#2563eb",
-    color: "#fff",
+    color: "#fff"
   };
   const buttonDisabledStyle = {
     ...buttonStyle,
     opacity: 0.5,
-    cursor: "not-allowed",
+    cursor: "not-allowed"
   };
 
   return (
     <div
       style={{
-        background: isDark ? "#23272f" : "#f6f6f6",
         minHeight: "100vh",
-        padding: "32px 8px",
+        padding: "32px 8px"
       }}
       data-aos="fade-up"
       data-aos-duration="1000"
@@ -300,7 +294,7 @@ export default function ContributorsLeaderboard() {
               fontSize: 32,
               fontWeight: 700,
               marginBottom: 12,
-              color: "#6366f1",
+              color: "#6366f1"
             }}
           >
             GSSoC'25 Leaderboard
@@ -311,11 +305,11 @@ export default function ContributorsLeaderboard() {
               maxWidth: 600,
               margin: "0 auto",
               color: isDark ? "#b3b3b3" : "#555",
-              lineHeight: 1.6,
+              lineHeight: 1.6
             }}
           >
-            Merged PRs count for each contributor. Points are awarded only when
-            PRs carry level labels.
+            Merged PRs count for each contributor. Points are awarded only when PRs carry level
+            labels.
           </p>
         </motion.div>
 
@@ -324,7 +318,7 @@ export default function ContributorsLeaderboard() {
           style={{
             display: "flex",
             justifyContent: "center",
-            marginBottom: 24,
+            marginBottom: 24
           }}
           data-aos="fade-up"
           data-aos-delay="200"
@@ -346,7 +340,7 @@ export default function ContributorsLeaderboard() {
                 background: isDark ? "#23272f" : "#fff",
                 color: isDark ? "#fff" : "#222",
                 fontSize: 15,
-                outline: "none",
+                outline: "none"
               }}
             />
             <FaSearch
@@ -355,7 +349,7 @@ export default function ContributorsLeaderboard() {
                 left: 12,
                 top: "50%",
                 transform: "translateY(-50%)",
-                color: isDark ? "#b3b3b3" : "#aaa",
+                color: isDark ? "#b3b3b3" : "#aaa"
               }}
             />
           </div>
@@ -367,7 +361,7 @@ export default function ContributorsLeaderboard() {
             display: "flex",
             gap: 18,
             marginBottom: 16,
-            flexWrap: "wrap",
+            flexWrap: "wrap"
           }}
           data-aos="fade-up"
           data-aos-delay="300"
@@ -382,7 +376,7 @@ export default function ContributorsLeaderboard() {
               border: `1px solid ${isDark ? "#444" : "#eee"}`,
               background: isDark
                 ? "linear-gradient(135deg,#23272f,#1a1d23)"
-                : "linear-gradient(135deg,#e0e7ff,#f3f4f6)",
+                : "linear-gradient(135deg,#e0e7ff,#f3f4f6)"
             }}
           >
             <div style={{ display: "flex", alignItems: "center" }}>
@@ -392,20 +386,18 @@ export default function ContributorsLeaderboard() {
                   borderRadius: 12,
                   background: isDark ? "rgba(59,130,246,0.2)" : "#dbeafe",
                   color: isDark ? "#60a5fa" : "#2563eb",
-                  marginRight: 16,
+                  marginRight: 16
                 }}
               >
                 <FaUsers style={{ fontSize: 22 }} />
               </div>
               <div>
-                <p style={{ fontSize: 14, color: isDark ? "#b3b3b3" : "#555" }}>
-                  Contributors
-                </p>
+                <p style={{ fontSize: 14, color: isDark ? "#b3b3b3" : "#555" }}>Contributors</p>
                 <p
                   style={{
                     fontSize: 22,
                     fontWeight: 700,
-                    color: isDark ? "#fff" : "#222",
+                    color: isDark ? "#fff" : "#222"
                   }}
                 >
                   {loading ? "..." : stats.totalContributors}+
@@ -423,7 +415,7 @@ export default function ContributorsLeaderboard() {
               border: `1px solid ${isDark ? "#444" : "#eee"}`,
               background: isDark
                 ? "linear-gradient(135deg,#23272f,#1a1d23)"
-                : "linear-gradient(135deg,#e0e7ff,#f3f4f6)",
+                : "linear-gradient(135deg,#e0e7ff,#f3f4f6)"
             }}
           >
             <div style={{ display: "flex", alignItems: "center" }}>
@@ -433,20 +425,18 @@ export default function ContributorsLeaderboard() {
                   borderRadius: 12,
                   background: isDark ? "rgba(16,185,129,0.2)" : "#bbf7d0",
                   color: isDark ? "#34d399" : "#059669",
-                  marginRight: 16,
+                  marginRight: 16
                 }}
               >
                 <FaCode style={{ fontSize: 22 }} />
               </div>
               <div>
-                <p style={{ fontSize: 14, color: isDark ? "#b3b3b3" : "#555" }}>
-                  Pull Requests
-                </p>
+                <p style={{ fontSize: 14, color: isDark ? "#b3b3b3" : "#555" }}>Pull Requests</p>
                 <p
                   style={{
                     fontSize: 22,
                     fontWeight: 700,
-                    color: isDark ? "#fff" : "#222",
+                    color: isDark ? "#fff" : "#222"
                   }}
                 >
                   {loading ? "..." : stats.flooredTotalPRs}+
@@ -464,7 +454,7 @@ export default function ContributorsLeaderboard() {
               border: `1px solid ${isDark ? "#444" : "#eee"}`,
               background: isDark
                 ? "linear-gradient(135deg,#23272f,#1a1d23)"
-                : "linear-gradient(135deg,#e0e7ff,#f3f4f6)",
+                : "linear-gradient(135deg,#e0e7ff,#f3f4f6)"
             }}
           >
             <div style={{ display: "flex", alignItems: "center" }}>
@@ -474,20 +464,18 @@ export default function ContributorsLeaderboard() {
                   borderRadius: 12,
                   background: isDark ? "rgba(139,92,246,0.2)" : "#ede9fe",
                   color: isDark ? "#a78bfa" : "#7c3aed",
-                  marginRight: 16,
+                  marginRight: 16
                 }}
               >
                 <FaStar style={{ fontSize: 22 }} />
               </div>
               <div>
-                <p style={{ fontSize: 14, color: isDark ? "#b3b3b3" : "#555" }}>
-                  Total Points
-                </p>
+                <p style={{ fontSize: 14, color: isDark ? "#b3b3b3" : "#555" }}>Total Points</p>
                 <p
                   style={{
                     fontSize: 22,
                     fontWeight: 700,
-                    color: isDark ? "#fff" : "#222",
+                    color: isDark ? "#fff" : "#222"
                   }}
                 >
                   {loading ? "..." : stats.flooredTotalPoints}+
@@ -506,7 +494,7 @@ export default function ContributorsLeaderboard() {
               borderRadius: 8,
               border: `1px solid ${isDark ? "#9f1239" : "#fecaca"}`,
               background: isDark ? "#3f1d1d" : "#fee2e2",
-              color: isDark ? "#fecaca" : "#7f1d1d",
+              color: isDark ? "#fecaca" : "#7f1d1d"
             }}
             data-aos="fade-up"
           >
@@ -523,7 +511,7 @@ export default function ContributorsLeaderboard() {
               boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
               border: `1px solid ${isDark ? "#444" : "#eee"}`,
               overflow: "hidden",
-              margin: "0 8px",
+              margin: "0 8px"
             }}
             data-aos="fade-up"
             data-aos-delay="400"
@@ -547,7 +535,7 @@ export default function ContributorsLeaderboard() {
                   style={{
                     textAlign: "center",
                     color: isDark ? "#b3b3b3" : "#555",
-                    padding: 16,
+                    padding: 16
                   }}
                 >
                   No contributors found.
@@ -570,7 +558,7 @@ export default function ContributorsLeaderboard() {
                             : "#fff"
                           : isDark
                           ? "#1a1d23"
-                          : "#f6f6f6",
+                          : "#f6f6f6"
                     }}
                     data-aos="fade-up"
                     data-aos-delay={`${400 + idx * 50}`}
@@ -618,7 +606,7 @@ export default function ContributorsLeaderboard() {
                               : "#f59e42"
                             : isDark
                             ? "#b3b3b3"
-                            : "#555",
+                            : "#555"
                       }}
                     >
                       {c.rank}
@@ -635,7 +623,7 @@ export default function ContributorsLeaderboard() {
                           borderRadius: "50%",
                           border: `2px solid ${isDark ? "#444" : "#fff"}`,
                           boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
-                          marginRight: 16,
+                          marginRight: 16
                         }}
                       />
                       <div className="info">
@@ -649,7 +637,7 @@ export default function ContributorsLeaderboard() {
                             fontSize: 15,
                             textDecoration: "none",
                             marginBottom: 4,
-                            display: "block",
+                            display: "block"
                           }}
                         >
                           {c.username}
@@ -664,7 +652,7 @@ export default function ContributorsLeaderboard() {
                             textDecoration: "none",
                             marginBottom: 4,
                             display: "block",
-                            whiteSpace: "nowrap",
+                            whiteSpace: "nowrap"
                           }}
                           className="view-contributors"
                         >
@@ -682,27 +670,23 @@ export default function ContributorsLeaderboard() {
                           gap: "1.4rem",
                           justifyContent: "center",
                           alignItems: "center",
-                          whiteSpace: "nowrap",
+                          whiteSpace: "nowrap"
                         }}
                       >
                         <Badge
                           count={c.prs}
                           label={`PR${c.prs !== 1 ? "s" : ""}`}
                           color={{
-                            background: isDark
-                              ? "rgba(59,130,246,0.2)"
-                              : "#dbeafe",
-                            color: isDark ? "#60a5fa" : "#2563eb",
+                            background: isDark ? "rgba(59,130,246,0.2)" : "#dbeafe",
+                            color: isDark ? "#60a5fa" : "#2563eb"
                           }}
                         />
                         <Badge
                           count={c.points}
                           label="Points"
                           color={{
-                            background: isDark
-                              ? "rgba(139,92,246,0.2)"
-                              : "#ede9fe",
-                            color: isDark ? "#a78bfa" : "#7c3aed",
+                            background: isDark ? "rgba(139,92,246,0.2)" : "#ede9fe",
+                            color: isDark ? "#a78bfa" : "#7c3aed"
                           }}
                         />
                       </div>
@@ -714,46 +698,42 @@ export default function ContributorsLeaderboard() {
 
             {/* pagination */}
             <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: 8,
-                padding: "16px 0",
-                borderTop: `1px solid ${isDark ? "#444" : "#eee"}`,
-              }}
+            className={`flex justify-center items-center gap-2 !py-4 border-t`}
             >
-              <button
+              <button 
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage((p) => p - 1)}
+                className={`px-3 py-1 rounded-md text-sm disabled:opacity-50 flex items-center justify-center mt-5`}
                 style={currentPage === 1 ? buttonDisabledStyle : buttonStyle}
               >
                 <ChevronLeft size={16} />
               </button>
-              <div style={{ display: "flex", gap: 8 }}>
-                {Array.from(
-                  { length: Math.ceil(filtered.length / PAGE_SIZE) },
-                  (_, i) => (
-                    <button
-                      key={i + 1}
-                      onClick={() => setCurrentPage(i + 1)}
-                      style={
-                        currentPage === i + 1 ? buttonActiveStyle : buttonStyle
-                      }
-                    >
-                      {i + 1}
-                    </button>
-                  )
-                )}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent:'center',
+                  gap: 8,   
+                }}
+              >
+                {Array.from({ length: Math.ceil(filtered.length / PAGE_SIZE) }, (_, i) => (
+                  <button
+                    key={i + 1}
+                    onClick={() => setCurrentPage(i + 1)}
+                    style={currentPage === i + 1 ? buttonActiveStyle : buttonStyle}
+                     className={`px-3 py-1 rounded w-3 `}
+                   
+                  >
+                    {i + 1}
+                  </button>
+                ))}
               </div>
               <button
                 disabled={currentPage === totalPages || totalPages === 0}
                 onClick={() => setCurrentPage((p) => p + 1)}
                 style={
-                  currentPage === totalPages || totalPages === 0
-                    ? buttonDisabledStyle
-                    : buttonStyle
+                  currentPage === totalPages || totalPages === 0 ? buttonDisabledStyle : buttonStyle
                 }
+                 className={`px-3 py-1 rounded-md text-sm disabled:opacity-50 flex items-center justify-center mt-5`}
               >
                 <ChevronRight size={16} />
               </button>
@@ -765,7 +745,7 @@ export default function ContributorsLeaderboard() {
                 padding: "16px 24px",
                 textAlign: "center",
                 borderTop: `1px solid ${isDark ? "#444" : "#eee"}`,
-                background: isDark ? "#23272f" : "#f6f6f6",
+                background: isDark ? "#23272f" : "#f6f6f6"
               }}
               data-aos="fade-up"
               data-aos-delay="800"
@@ -774,11 +754,10 @@ export default function ContributorsLeaderboard() {
                 style={{
                   fontSize: 14,
                   color: isDark ? "#b3b3b3" : "#555",
-                  marginBottom: 12,
+                  marginBottom: 12
                 }}
               >
-                Want to see your name here? Add level labels to your PRs for
-                points!
+                Want to see your name here? Add level labels to your PRs for points!
               </p>
               <a
                 href="https://gssoc.girlscript.tech/"
@@ -794,7 +773,7 @@ export default function ContributorsLeaderboard() {
                   fontWeight: 500,
                   borderRadius: 8,
                   textDecoration: "none",
-                  transition: "background 0.3s ease", // smooth toggle
+                  transition: "background 0.3s ease" // smooth toggle
                 }}
               >
                 <FaGithub style={{ marginRight: 8 }} />

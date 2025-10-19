@@ -137,6 +137,35 @@ select:focus {
 /* =========================
    Hero Section
 ========================= */
+.typewriter-heading {
+  font-size: 3.2rem;
+  font-weight: 700;
+  color: var(--text-color);
+  background: linear-gradient(45deg, var(--text-primary, #1f2937), var(--user-accent-primary));
+  background-clip: text; 
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+  font-family: "Poppins", sans-serif;
+  text-align: center;
+  white-space: nowrap; 
+  position: relative;
+}
+
+.cursor {
+  display: inline-block;
+  width: 3px;
+  height: 1.2em;
+ background: linear-gradient(45deg, var(--text-primary, #1f2937), var(--user-accent-primary));
+  margin-left: 4px;
+  position: absolute;
+  animation: blink 0.7s infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
 
 .home-container {
   max-width: 1400px;

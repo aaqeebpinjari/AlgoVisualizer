@@ -66,7 +66,7 @@ const LearnLanding = () => {
           <p>Explore visualizers, overviews, and comparisons across core CS topics.</p>
 
           <div className="learn-search">
-            <Search size={18} />
+            <Search size={24} />
             <input
               value={q}
               onChange={(e) => setQ(e.target.value)}

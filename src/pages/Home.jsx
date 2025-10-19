@@ -117,6 +117,48 @@ function getTheme(isLight) {
   };
 }
 
+/** --------- Typewritter heading -----------*/  
+const TypewriterHeading = () => {
+ const words = ["Visualize" , "Analyze", "Understand", "Master Algorithms"];
+  const [displayedWord, setDisplayedWord] = useState("");
+  const [wordIndex, setWordIndex] = useState(0);
+  const [letterIndex, setLetterIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const currentWord = words[wordIndex];
+    let typingSpeed = isDeleting ? 50 : 100;
+
+    const timeout = setTimeout(() => {
+      if (!isDeleting && letterIndex < currentWord.length) {
+        // Typing
+        setDisplayedWord(currentWord.substring(0, letterIndex + 1));
+        setLetterIndex(letterIndex + 1);
+      } else if (isDeleting && letterIndex > 0) {
+        // Deleting
+        setDisplayedWord(currentWord.substring(0, letterIndex - 1));
+        setLetterIndex(letterIndex - 1);
+      } else if (!isDeleting && letterIndex === currentWord.length) {
+        // Pause before deleting
+        setTimeout(() => setIsDeleting(true), 1000);
+      } else if (isDeleting && letterIndex === 0) {
+        // Move to next word
+        setIsDeleting(false);
+        setWordIndex((wordIndex + 1) % words.length);
+      }
+    }, typingSpeed);
+
+    return () => clearTimeout(timeout);
+  }, [letterIndex, isDeleting, wordIndex, words]);
+
+  return (
+    <h1 className="typewriter-heading">
+      {displayedWord}
+      <span className="cursor" />
+    </h1>
+  );
+};
+
 /** ---------- Shared layout styles ---------- */
 const container = { width: "100%", display: "flex", justifyContent: "center" };
 const inner = { width: "min(1200px, 100%)", padding: "1.5rem" };
@@ -372,9 +414,10 @@ const Home = () => {
   return (
     <div className="home-dashboard">
       <style>{gridStyles}</style>
-
+      {/* hero heading */} 
+      <TypewriterHeading/>
       {/* ===== Hero ===== */}
-      <section style={{ ...container, padding: "4.25rem 1.5rem 2rem" }} data-aos="fade-up" data-aos-duration="1000">
+      <section style={{ ...container, padding: "4.25rem 1.5rem 2rem" }} data-aos="fade-up" data-aos-duration="800">
         <div style={{ ...inner }}>
           <div className="hero-grid">
             {/* LEFT: Bubble Sort */}
@@ -592,7 +635,7 @@ const Home = () => {
 
       {/* Feature Cards with detailed content */}
       {/* ADD THIS NEW SECTION */}
-      <div className="algo-learning-updates-container" data-aos="fade-up" data-aos-duration="1000">
+      <div className="algo-learning-updates-container" data-aos="fade-up" data-aos-duration="800">
         <section className="algorithm-buttons" data-aos="fade-up" data-aos-delay="200">
           <h2 className='buttons-heading'>Resources</h2>
 

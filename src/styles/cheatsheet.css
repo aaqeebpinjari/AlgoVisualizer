@@ -368,6 +368,7 @@
 .expand-btn {
   background: transparent;
   border: none;
+  width: 40%;
   color: var(--text-secondary);
   cursor: pointer;
   padding: 0.5rem;
@@ -375,7 +376,7 @@
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  font-size: 1.2rem;
+  font-size: 1.2rem !important;
 }
 
 .expand-btn:hover {
@@ -396,11 +397,11 @@
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  padding: 0.6rem 1rem;
+  padding: 1rem 1.1rem !important;
   background: var(--background-color);
   border: 1px solid var(--border-color);
   border-radius: 20px;
-  font-size: 0.9rem;
+  font-size: .9rem !important;
   color: var(--text-primary);
   line-height: 1;
   vertical-align: middle;
@@ -408,7 +409,7 @@
 
 .badge-label {
   font-weight: 600;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   line-height: 1;
   display: inline-block;
   vertical-align: middle;

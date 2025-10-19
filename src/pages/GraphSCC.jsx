@@ -5,6 +5,7 @@ import "../styles/graphSCC.css";
 import { Network } from "vis-network/standalone";
 import "vis-network/styles/vis-network.css";
 import { useTheme } from "../ThemeContext";
+import { sccDetection } from "../data/allCodes";
 
 const graph = {
   nodes: [
@@ -151,9 +152,10 @@ const GraphVisulizer = () => {
       </h2>
 
       {/* Main Graph */}
-      <div className="w-full sm:w-[90%] md:w-[60%] lg:w-[50%] h-[500px] md:h-[500px]"
+      <div
+        className="w-full sm:w-[90%] md:w-[60%] lg:w-[50%] h-[500px] md:h-[500px]"
         ref={mainGraphRef}
-        style={{   
+        style={{
           border: "2px solid var(--text-muted)",
           borderRadius: "10px",
           marginBottom: "20px"
@@ -202,6 +204,8 @@ const GraphVisulizer = () => {
 };
 
 const GraphSCC = () => {
+  const [selectedLanguage, setSelectedLanguage] = useState("java");
+  const [algo, setAlgo] = useState("");
   return (
     <div className="theme-container opacity-90" data-aos="fade-up" data-aos-duration="1000">
       <h1 className="theme-title">Strongly Connected Component</h1>
@@ -231,7 +235,11 @@ const GraphSCC = () => {
         <div className="example">
           <div className="show-graph">
             <h2>🔹 SCC in Directed Graph</h2>
-            <Graph graph={graph} options={options} className="w-full sm:w-[90%] md:w-[60%] lg:w-[50%] h-[500px] md:h-[500px] border-3 border-gray-200 rounded-2xl"/>
+            <Graph
+              graph={graph}
+              options={options}
+              className="w-full sm:w-[90%] md:w-[60%] lg:w-[50%] h-[500px] md:h-[500px] border-3 border-gray-200 rounded-2xl"
+            />
           </div>
           <div className="explanation">
             <p>Here:</p>
@@ -307,7 +315,7 @@ const GraphSCC = () => {
             <div className="bg-blue-800 border border-blue-400 rounded-xl !p-2 text-center shadow-lg shadow-blue-500/50 transition-transform duration-300 hover:scale-105 hover:bg-blue-900 flex-1 min-w-[150px]">
               <h3 className=" !text-white">2 Reverse Graph: </h3>
               <ol className="list-decimal list-inside space-y-1 mb-3 flex flex-col justify-center items-start">
-                <li className=" !text-gray-200" >Reverse the direction of all edges.</li>
+                <li className=" !text-gray-200">Reverse the direction of all edges.</li>
               </ol>
             </div>
             <div className="bg-blue-800 border border-blue-400 rounded-xl !p-2 text-center shadow-lg shadow-blue-500/50 transition-transform duration-300 hover:scale-105 hover:bg-blue-900 flex-1 min-w-[150px]">
@@ -351,8 +359,12 @@ const GraphSCC = () => {
               <ol className="list-decimal list-inside space-y-1 mb-3 !px-2 flex flex-col justify-center items-start !text-white">
                 <li className=" !text-gray-200">Perform a DFS traversal.</li>
                 <li className=" !text-gray-200">Update low[v] for each vertex.</li>
-                <li className=" !text-gray-200">If disc[v] == low[v], then v is the root of an SCC</li>
-                <li className=" !text-gray-200">Pop vertices from the stack until v is reached → forms one SC</li>
+                <li className=" !text-gray-200">
+                  If disc[v] == low[v], then v is the root of an SCC
+                </li>
+                <li className=" !text-gray-200">
+                  Pop vertices from the stack until v is reached → forms one SC
+                </li>
               </ol>
             </div>
           </div>
@@ -401,6 +413,94 @@ const GraphSCC = () => {
       {/* visulization card */}
       <div className="flex items-center justify-center" data-aos="fade-up" data-aos-delay="200">
         <GraphVisulizer />
+      </div>
+
+      {/* code implementation for scc using Kosaraju’s algo */}
+      <div
+        className="theme-card"
+        style={{ marginTop: "2rem" }}
+        data-aos="fade-up"
+        data-aos-delay="100"
+      >
+        <div className="theme-card-header">
+          <h3>SCC code using Kosaraju’s Algorithm</h3>
+          <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+            {["java", "python", "cpp", "javascript", "go"].map((lang) => (
+              <button
+                key={lang}
+                className={`btn ${selectedLanguage === lang ? "btn-primary" : "btn-secondary"}`}
+                onClick={() => setSelectedLanguage(lang)}
+                style={{ fontSize: "0.9rem", padding: "0.5rem 1rem" }}
+              >
+                {lang.charAt(0).toUpperCase() + lang.slice(1)}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div
+          style={{
+            background: "var(--surface-bg)",
+            borderRadius: "8px",
+            padding: "1.2rem",
+            overflow: "auto",
+            maxHeight: "500px",
+            marginLeft: "1rem",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent:'center',
+            gap: "1rem"
+          }}
+        >
+          <div style={{
+            display:'flex',
+            gap:'1rem',
+            justifyContent:'center',
+            alignItems:'center',
+          }}>
+            <label style={{ marginRight: "5px", marginBottom: "1rem" }}>Algorithm:</label>
+            <select
+              value={algo}
+              onChange={(e) => setAlgo(e.target.value)}
+              style={{ marginBottom: "1rem" }}
+            >
+              <option value="BFS">BFS</option>
+              <option value="DFS">DFS</option>
+            </select>
+          </div>
+          <pre
+            style={{
+              margin: 0,
+              fontFamily: 'Consolas, Monaco, "Courier New", monospace',
+              fontSize: "0.9rem",
+              lineHeight: "1.5",
+              color: "var(--text-primary)",
+              whiteSpace: "pre-wrap",
+              wordBreak: "break-word"
+            }}
+          >
+            <code>
+              {(algo === "BFS"
+                ? sccDetection.bfs[selectedLanguage]
+                : sccDetection.dfs[selectedLanguage]) ||
+                `// ${algo} implementation for graph in ${selectedLanguage.toUpperCase()} coming soon!
+          `}
+            </code>
+          </pre>
+        </div>
+        <div
+          style={{
+            marginTop: "1rem",
+            padding: "0.75rem",
+            background: "var(--accent-warning-bg)",
+            borderRadius: "6px",
+            fontSize: "0.9rem",
+            color: "var(--text-secondary)"
+          }}
+        >
+          <strong>Note:</strong> This is the actual implementation code for Depth-First Search in{" "}
+          {selectedLanguage.toUpperCase()}. You can copy and use this code in your projects.
+        </div>
       </div>
     </div>
   );

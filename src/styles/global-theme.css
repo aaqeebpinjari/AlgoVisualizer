@@ -3067,3 +3067,22 @@
   width: 0%;
   transition: width 160ms linear;
 }
+.ab-hud {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  margin: .25rem auto .25rem;
+  font-size: .95rem;
+  color: var(--theme-text-secondary);
+}
+.ab-hud strong { color: var(--text-primary); }
+.tag-pruned {
+  padding: .15rem .5rem;
+  border-radius: 999px;
+  background: var(--accent-warning-bg, rgba(255,180,0,.15));
+  border: 1px solid var(--accent-warning-border, rgba(255,180,0,.35));
+  color: var(--accent-warning-fg, #f59e0b);
+  font-weight: 700;
+  font-size: .8rem;
+}

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Graph from "react-vis-network-graph";
 import "../styles/graphEuler.css";
 import "aos/dist/aos.css";
+import { eulerDetection } from "../data/allCodes";
 
 const EulerGraphVisualizer = ({ customGraph }) => {
   //   const containerRef = useRef(null);
@@ -22,7 +23,7 @@ const EulerGraphVisualizer = ({ customGraph }) => {
     ]
   };
 
-  const [graph, setGraph] = useState(customGraph || defaultGraph); 
+  const [graph, setGraph] = useState(customGraph || defaultGraph);
   const [status, setStatus] = useState("");
 
   //   check for eulerian
@@ -151,6 +152,9 @@ const EulerGraphVisualizer = ({ customGraph }) => {
 const GraphEulerian = () => {
   const [customGraph, setCustomGraph] = useState(null);
   const [inputText, setInputText] = useState("");
+  const [selectedLanguage, setSelectedLanguage] = useState("java");
+  const [algo, setAlgo] = useState("");
+  const [graphType, setGraphType] = useState("");
   const handleInputChange = (e) => {
     setInputText(e.target.value);
   };
@@ -160,7 +164,7 @@ const GraphEulerian = () => {
       if (!parsed.nodes || !parsed.edges) {
         alert("Invalid graph format. Must contain 'nodes' and 'edges'.");
         return;
-      } 
+      }
       setCustomGraph(parsed);
     } catch (err) {
       alert("Invalid JSON format.");
@@ -280,6 +284,106 @@ const GraphEulerian = () => {
       {/* euler visulization component */}
       <div data-aos="fade-up" data-aos-delay="300">
         <EulerGraphVisualizer customGraph={customGraph} />
+      </div>
+
+      {/* code implimentation for euluers circuit or path detection */}
+      <div
+        className="theme-card"
+        style={{ marginTop: "2rem" }}
+        data-aos="fade-up"
+        data-aos-delay="200"
+      >
+        <div className="theme-card-header">
+          <h3 style={{marginBottom:'2rem'}}>
+            Eulers Circuit/Path detection :
+            <select style={{borderRadius:'20px' , boxShadow:'0 4px 12px rgba(0 , 0 , 0 , 0.5)' , marginLeft:'1rem'}} value={graphType} onChange={(e) => setGraphType(e.target.value)}>
+              <option value="Directed">Directed</option>
+              <option value="UnDirected">UnDirected</option>
+            </select>
+          </h3>
+
+          <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+            {["java", "python", "cpp", "javascript", "go"].map((lang) => (
+              <button
+                key={lang}
+                className={`btn ${selectedLanguage === lang ? "btn-primary" : "btn-secondary"}`}
+                onClick={() => setSelectedLanguage(lang)}
+                style={{ fontSize: "0.9rem", padding: "0.5rem 1rem" }}
+              >
+                {lang.charAt(0).toUpperCase() + lang.slice(1)}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div
+          style={{
+            background: "var(--surface-bg)",
+            borderRadius: "8px",
+            padding: "1.2rem",
+            overflow: "auto",
+            maxHeight: "500px",
+            marginLeft: "1rem",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            gap: "1rem"
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              gap: "1rem",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            <label style={{ marginRight: "5px", marginBottom: "1rem" }}>Algorithm:</label>
+            <select
+              value={algo}
+              onChange={(e) => setAlgo(e.target.value)}
+              style={{ marginBottom: "1rem" }}
+            >
+              <option value="BFS">BFS</option>
+              <option value="DFS">DFS</option>
+            </select>
+          </div>
+          <pre
+            style={{
+              margin: 0,
+              fontFamily: 'Consolas, Monaco, "Courier New", monospace',
+              fontSize: "0.9rem",
+              lineHeight: "1.5",
+              color: "var(--text-primary)",
+              whiteSpace: "pre-wrap",
+              wordBreak: "break-word"
+            }}
+          >
+            <code>
+              {(graphType === "Directed"
+                ? algo === "BFS"
+                  ? eulerDetection.directed.bfs[selectedLanguage]
+                  : eulerDetection.directed.dfs[selectedLanguage]
+                : algo === "BFS"
+                ? eulerDetection.undirected.bfs[selectedLanguage]
+                : eulerDetection.undirected.dfs[selectedLanguage]) ||
+                `// ${algo} implementation for ${graphType} graph in ${selectedLanguage.toUpperCase()} coming soon!
+            `}
+            </code>
+          </pre>
+        </div>
+        <div
+          style={{
+            marginTop: "1rem",
+            padding: "0.75rem",
+            background: "var(--accent-warning-bg)",
+            borderRadius: "6px",
+            fontSize: "0.9rem",
+            color: "var(--text-secondary)"
+          }}
+        >
+          <strong>Note:</strong> This is the actual implementation code for Depth-First Search in{" "}
+          {selectedLanguage.toUpperCase()}. You can copy and use this code in your projects.
+        </div>
       </div>
     </div>
   );

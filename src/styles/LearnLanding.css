@@ -97,13 +97,13 @@
   gap: 8px;
   border: 1.5px solid var(--accent-2);
   background: var(--card-2);
-  padding: 6px 8px;
+  padding: 10px 14px;
   /* decreased padding */
   border-radius: 10px;
   /* slightly smaller radius */
   box-shadow: 0 4px 24px rgba(99, 102, 241, 0.10), var(--shadow);
-  margin-top: 8px;
-  max-width: 320px;
+  margin: 10px 0;
+  max-width: 400px;
   /* decreased width */
 }
 
@@ -113,11 +113,12 @@
   border: none;
   outline: none;
   font-size: 0.95rem;
+  padding: 16px 14px;
   /* decreased font size */
   color: var(--text);
   font-weight: 500;
   font-family: 'Segoe UI', Arial, sans-serif;
-  min-width: 0;
+  min-width: 150px;
   height: 28px;
   /* decreased height */
 }
@@ -136,6 +137,7 @@
   font-weight: 700;
   border-radius: 8px;
   padding: 7px 14px;
+  max-width: 100px;
   box-shadow: 0 2px 8px rgba(99, 102, 241, 0.12);
   transition: background .18s, box-shadow .18s;
 }

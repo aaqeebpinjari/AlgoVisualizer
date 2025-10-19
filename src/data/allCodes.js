@@ -2195,6 +2195,928 @@ func main() {
   },
 };
 
+// graph SCC using Kosaraju’s algo
+export const sccDetection = {
+  dfs: {
+    java: `import java.util.*;
+
+public class KosarajuSCC {
+    static void dfs1(int v, boolean[] vis, Stack<Integer> st, List<List<Integer>> g) {
+        vis[v] = true;
+        for (int to : g.get(v)) if (!vis[to]) dfs1(to, vis, st, g);
+        st.push(v);
+    }
+
+    static void dfs2(int v, boolean[] vis, List<Integer> comp, List<List<Integer>> gt) {
+        vis[v] = true;
+        comp.add(v);
+        for (int to : gt.get(v)) if (!vis[to]) dfs2(to, vis, comp, gt);
+    }
+
+    static List<List<Integer>> findSCC_DFS(int n, List<List<Integer>> g) {
+        boolean[] vis = new boolean[n];
+        Stack<Integer> st = new Stack<>();
+        for (int i = 0; i < n; i++) if (!vis[i]) dfs1(i, vis, st, g);
+
+        // Transpose
+        List<List<Integer>> gt = new ArrayList<>();
+        for (int i = 0; i < n; i++) gt.add(new ArrayList<>());
+        for (int u = 0; u < n; u++)
+            for (int v : g.get(u)) gt.get(v).add(u);
+
+        Arrays.fill(vis, false);
+        List<List<Integer>> sccs = new ArrayList<>();
+        while (!st.isEmpty()) {
+            int v = st.pop();
+            if (!vis[v]) {
+                List<Integer> comp = new ArrayList<>();
+                dfs2(v, vis, comp, gt);
+                sccs.add(comp);
+            }
+        }
+        return sccs;
+    }
+
+    public static void main(String[] args) {
+        int n = 5;
+        List<List<Integer>> g = new ArrayList<>();
+        for (int i = 0; i < n; i++) g.add(new ArrayList<>());
+        g.get(0).add(2);
+        g.get(2).add(1);
+        g.get(1).add(0);
+        g.get(0).add(3);
+        g.get(3).add(4);
+
+        System.out.println("SCCs (DFS): " + findSCC_DFS(n, g));
+    }
+}`,
+
+
+    python: `def dfs1(v, g, vis, stack):
+    vis[v] = True
+    for to in g[v]:
+        if not vis[to]:
+            dfs1(to, g, vis, stack)
+    stack.append(v)
+
+def dfs2(v, gt, vis, comp):
+    vis[v] = True
+    comp.append(v)
+    for to in gt[v]:
+        if not vis[to]:
+            dfs2(to, gt, vis, comp)
+
+def find_scc_dfs(n, g):
+    vis = [False] * n
+    stack = []
+    for i in range(n):
+        if not vis[i]:
+            dfs1(i, g, vis, stack)
+
+    gt = [[] for _ in range(n)]
+    for u in range(n):
+        for v in g[u]:
+            gt[v].append(u)
+
+    vis = [False] * n
+    sccs = []
+    while stack:
+        v = stack.pop()
+        if not vis[v]:
+            comp = []
+            dfs2(v, gt, vis, comp)
+            sccs.append(comp)
+    return sccs
+
+if __name__ == "__main__":
+    n = 5
+    g = [[] for _ in range(n)]
+    g[0].append(2)
+    g[2].append(1)
+    g[1].append(0)
+    g[0].append(3)
+    g[3].append(4)
+    print("SCCs (DFS):", find_scc_dfs(n, g))`,
+
+
+    cpp: `#include <bits/stdc++.h>
+using namespace std;
+
+void dfs1(int v, vector<int>& vis, stack<int>& st, vector<vector<int>>& g) {
+    vis[v] = 1;
+    for (int to : g[v]) if (!vis[to]) dfs1(to, vis, st, g);
+    st.push(v);
+}
+
+void dfs2(int v, vector<int>& vis, vector<int>& comp, vector<vector<int>>& gt) {
+    vis[v] = 1;
+    comp.push_back(v);
+    for (int to : gt[v]) if (!vis[to]) dfs2(to, vis, comp, gt);
+}
+
+vector<vector<int>> findSCC_DFS(int n, vector<vector<int>>& g) {
+    vector<int> vis(n, 0);
+    stack<int> st;
+    for (int i = 0; i < n; ++i) if (!vis[i]) dfs1(i, vis, st, g);
+
+    vector<vector<int>> gt(n);
+    for (int u = 0; u < n; ++u)
+        for (int v : g[u]) gt[v].push_back(u);
+
+    fill(vis.begin(), vis.end(), 0);
+    vector<vector<int>> sccs;
+    while (!st.empty()) {
+        int v = st.top(); st.pop();
+        if (!vis[v]) {
+            vector<int> comp;
+            dfs2(v, vis, comp, gt);
+            sccs.push_back(comp);
+        }
+    }
+    return sccs;
+}
+
+int main() {
+    int n = 5;
+    vector<vector<int>> g(n);
+    g[0].push_back(2);
+    g[2].push_back(1);
+    g[1].push_back(0);
+    g[0].push_back(3);
+    g[3].push_back(4);
+
+    auto sccs = findSCC_DFS(n, g);
+    cout << "SCCs (DFS):\\n";
+    for (auto &c : sccs) {
+        for (int x : c) cout << x << " ";
+        cout << "\\n";
+    }
+    return 0;
+}`,
+
+
+    javascript: `function dfs1(v, g, vis, stack) {
+    vis[v] = true;
+    for (const to of g[v]) if (!vis[to]) dfs1(to, g, vis, stack);
+    stack.push(v);
+}
+
+function dfs2(v, gt, vis, comp) {
+    vis[v] = true;
+    comp.push(v);
+    for (const to of gt[v]) if (!vis[to]) dfs2(to, gt, vis, comp);
+}
+
+function findSCC_DFS(n, g) {
+    const vis = Array(n).fill(false);
+    const stack = [];
+    for (let i = 0; i < n; i++) if (!vis[i]) dfs1(i, g, vis, stack);
+
+    const gt = Array.from({ length: n }, () => []);
+    for (let u = 0; u < n; u++) for (const v of g[u]) gt[v].push(u);
+
+    vis.fill(false);
+    const sccs = [];
+    while (stack.length) {
+        const v = stack.pop();
+        if (!vis[v]) {
+            const comp = [];
+            dfs2(v, gt, vis, comp);
+            sccs.push(comp);
+        }
+    }
+    return sccs;
+}
+
+const n = 5;
+const g = Array.from({ length: n }, () => []);
+g[0].push(2);
+g[2].push(1);
+g[1].push(0);
+g[0].push(3);
+g[3].push(4);
+console.log("SCCs (DFS):", findSCC_DFS(n, g));`,
+
+
+    go: `package main
+
+import "fmt"
+
+func dfs1(v int, g [][]int, vis []bool, st *[]int) {
+    vis[v] = true
+    for _, to := range g[v] {
+        if !vis[to] {
+            dfs1(to, g, vis, st)
+        }
+    }
+    *st = append(*st, v)
+}
+
+func dfs2(v int, gt [][]int, vis []bool, comp *[]int) {
+    vis[v] = true
+    *comp = append(*comp, v)
+    for _, to := range gt[v] {
+        if !vis[to] {
+            dfs2(to, gt, vis, comp)
+        }
+    }
+}
+
+func FindSCC_DFS(n int, g [][]int) [][]int {
+    vis := make([]bool, n)
+    var st []int
+    for i := 0; i < n; i++ {
+        if !vis[i] {
+            dfs1(i, g, vis, &st)
+        }
+    }
+
+    gt := make([][]int, n)
+    for u := 0; u < n; u++ {
+        for _, v := range g[u] {
+            gt[v] = append(gt[v], u)
+        }
+    }
+
+    for i := range vis { vis[i] = false }
+    var sccs [][]int
+    for len(st) > 0 {
+        v := st[len(st)-1]
+        st = st[:len(st)-1]
+        if !vis[v] {
+            var comp []int
+            dfs2(v, gt, vis, &comp)
+            sccs = append(sccs, comp)
+        }
+    }
+    return sccs
+}
+
+func main() {
+    n := 5
+    g := make([][]int, n)
+    g[0] = append(g[0], 2)
+    g[2] = append(g[2], 1)
+    g[1] = append(g[1], 0)
+    g[0] = append(g[0], 3)
+    g[3] = append(g[3], 4)
+
+    fmt.Println("SCCs (DFS):", FindSCC_DFS(n, g))
+}`,
+  },
+
+  bfs: {
+    java: `import java.util.*;
+
+public class SCC_BFS {
+    static List<List<Integer>> findSCC_BFS(int n, List<List<Integer>> g) {
+        // Step 1: Get topological order using BFS (Kahn’s algo)
+        int[] indeg = new int[n];
+        for (int u = 0; u < n; u++) for (int v : g.get(u)) indeg[v]++;
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < n; i++) if (indeg[i] == 0) q.add(i);
+
+        List<Integer> order = new ArrayList<>();
+        while (!q.isEmpty()) {
+            int u = q.poll();
+            order.add(u);
+            for (int v : g.get(u)) {
+                if (--indeg[v] == 0) q.add(v);
+            }
+        }
+
+        // Step 2: Transpose
+        List<List<Integer>> gt = new ArrayList<>();
+        for (int i = 0; i < n; i++) gt.add(new ArrayList<>());
+        for (int u = 0; u < n; u++)
+            for (int v : g.get(u)) gt.get(v).add(u);
+
+        // Step 3: BFS traversal in reverse order
+        boolean[] vis = new boolean[n];
+        List<List<Integer>> sccs = new ArrayList<>();
+        Collections.reverse(order);
+        for (int v : order) {
+            if (!vis[v]) {
+                List<Integer> comp = new ArrayList<>();
+                Queue<Integer> bfs = new LinkedList<>();
+                bfs.add(v);
+                vis[v] = true;
+                while (!bfs.isEmpty()) {
+                    int cur = bfs.poll();
+                    comp.add(cur);
+                    for (int nxt : gt.get(cur)) {
+                        if (!vis[nxt]) {
+                            vis[nxt] = true;
+                            bfs.add(nxt);
+                        }
+                    }
+                }
+                sccs.add(comp);
+            }
+        }
+        return sccs;
+    }
+
+    public static void main(String[] args) {
+        int n = 5;
+        List<List<Integer>> g = new ArrayList<>();
+        for (int i = 0; i < n; i++) g.add(new ArrayList<>());
+        g.get(0).add(2);
+        g.get(2).add(1);
+        g.get(1).add(0);
+        g.get(0).add(3);
+        g.get(3).add(4);
+
+        System.out.println("SCCs (BFS): " + findSCC_BFS(n, g));
+    }
+}`,
+
+
+    python: `from collections import deque
+
+def find_scc_bfs(n, g):
+    indeg = [0]*n
+    for u in range(n):
+        for v in g[u]:
+            indeg[v]+=1
+
+    q = deque([i for i in range(n) if indeg[i]==0])
+    order=[]
+    while q:
+        u=q.popleft()
+        order.append(u)
+        for v in g[u]:
+            indeg[v]-=1
+            if indeg[v]==0:
+                q.append(v)
+
+    gt=[[] for _ in range(n)]
+    for u in range(n):
+        for v in g[u]:
+            gt[v].append(u)
+
+    vis=[False]*n
+    sccs=[]
+    for v in reversed(order):
+        if not vis[v]:
+            comp=[]
+            q=deque([v])
+            vis[v]=True
+            while q:
+                cur=q.popleft()
+                comp.append(cur)
+                for nxt in gt[cur]:
+                    if not vis[nxt]:
+                        vis[nxt]=True
+                        q.append(nxt)
+            sccs.append(comp)
+    return sccs
+
+if __name__=="__main__":
+    n=5
+    g=[[] for _ in range(n)]
+    g[0].append(2)
+    g[2].append(1)
+    g[1].append(0)
+    g[0].append(3)
+    g[3].append(4)
+    print("SCCs (BFS):", find_scc_bfs(n,g))`,
+    
+    cpp: `#include <bits/stdc++.h>
+using namespace std;
+
+vector<vector<int>> findSCC_BFS(int n, vector<vector<int>>& g) {
+    vector<int> indeg(n,0);
+    for(int u=0;u<n;u++) for(int v:g[u]) indeg[v]++;
+
+    queue<int> q;
+    for(int i=0;i<n;i++) if(indeg[i]==0) q.push(i);
+
+    vector<int> order;
+    while(!q.empty()){
+        int u=q.front(); q.pop();
+        order.push_back(u);
+        for(int v:g[u]) if(--indeg[v]==0) q.push(v);
+    }
+
+    vector<vector<int>> gt(n);
+    for(int u=0;u<n;u++) for(int v:g[u]) gt[v].push_back(u);
+
+    vector<int> vis(n,0);
+    vector<vector<int>> sccs;
+    reverse(order.begin(), order.end());
+    for(int v:order){
+        if(!vis[v]){
+            vector<int> comp;
+            queue<int> bfs;
+            bfs.push(v);
+            vis[v]=1;
+            while(!bfs.empty()){
+                int cur=bfs.front(); bfs.pop();
+                comp.push_back(cur);
+                for(int nxt:gt[cur]) if(!vis[nxt]){
+                    vis[nxt]=1;
+                    bfs.push(nxt);
+                }
+            }
+            sccs.push_back(comp);
+        }
+    }
+    return sccs;
+}
+
+int main(){
+    int n=5;
+    vector<vector<int>> g(n);
+    g[0].push_back(2);
+    g[2].push_back(1);
+    g[1].push_back(0);
+    g[0].push_back(3);
+    g[3].push_back(4);
+
+    auto sccs=findSCC_BFS(n,g);
+    cout<<"SCCs (BFS):\\n";
+    for(auto &c:sccs){for(int x:c)cout<<x<<" ";cout<<"\\n";}
+}`,
+    
+    javascript: `function findSCC_BFS(n, g) {
+    const indeg = Array(n).fill(0);
+    for (let u = 0; u < n; u++) for (const v of g[u]) indeg[v]++;
+
+    const q = [], order = [];
+    for (let i = 0; i < n; i++) if (indeg[i] === 0) q.push(i);
+
+    while (q.length) {
+        const u = q.shift();
+        order.push(u);
+        for (const v of g[u]) if (--indeg[v] === 0) q.push(v);
+    }
+
+    const gt = Array.from({ length: n }, () => []);
+    for (let u = 0; u < n; u++) for (const v of g[u]) gt[v].push(u);
+
+    const vis = Array(n).fill(false);
+    const sccs = [];
+    for (const v of order.reverse()) {
+        if (!vis[v]) {
+            const comp = [], bfs = [v];
+            vis[v] = true;
+            while (bfs.length) {
+                const cur = bfs.shift();
+                comp.push(cur);
+                for (const nxt of gt[cur])
+                    if (!vis[nxt]) { vis[nxt] = true; bfs.push(nxt); }
+            }
+            sccs.push(comp);
+        }
+    }
+    return sccs;
+}
+
+const n=5;
+const g=Array.from({length:n},()=>[]);
+g[0].push(2); g[2].push(1); g[1].push(0); g[0].push(3); g[3].push(4);
+console.log("SCCs (BFS):", findSCC_BFS(n,g));`,
+    
+    go: `package main
+import "fmt"
+
+func FindSCC_BFS(n int, g [][]int) [][]int {
+    indeg := make([]int, n)
+    for u := 0; u < n; u++ {
+        for _, v := range g[u] {
+            indeg[v]++
+        }
+    }
+
+    q := []int{}
+    for i := 0; i < n; i++ {
+        if indeg[i] == 0 {
+            q = append(q, i)
+        }
+    }
+
+    order := []int{}
+    for len(q) > 0 {
+        u := q[0]
+        q = q[1:]
+        order = append(order, u)
+        for _, v := range g[u] {
+            indeg[v]--
+            if indeg[v] == 0 {
+                q = append(q, v)
+            }
+        }
+    }
+
+    gt := make([][]int, n)
+    for u := 0; u < n; u++ {
+        for _, v := range g[u] {
+            gt[v] = append(gt[v], u)
+        }
+    }
+
+    vis := make([]bool, n)
+    var sccs [][]int
+    for i := len(order) - 1; i >= 0; i-- {
+        v := order[i]
+        if !vis[v] {
+            comp := []int{}
+            q := []int{v}
+            vis[v] = true
+            for len(q) > 0 {
+                cur := q[0]
+                q = q[1:]
+                comp = append(comp, cur)
+                for _, nxt := range gt[cur] {
+                    if !vis[nxt] {
+                        vis[nxt] = true
+                        q = append(q, nxt)
+                    }
+                }
+            }
+            sccs = append(sccs, comp)
+        }
+    }
+    return sccs
+}
+
+func main() {
+    n := 5
+    g := make([][]int, n)
+    g[0] = append(g[0], 2)
+    g[2] = append(g[2], 1)
+    g[1] = append(g[1], 0)
+    g[0] = append(g[0], 3)
+    g[3] = append(g[3], 4)
+
+    fmt.Println("SCCs (BFS):", FindSCC_BFS(n, g))
+}`,
+  },
+};
+
+// graph eulers detection
+export const eulerDetection = {
+  undirected: {
+    dfs: {
+      java: `import java.util.*;
+
+public class EulerUndirectedDFS {
+    public static boolean hasEulerianPathOrCircuit(ArrayList<ArrayList<Integer>> adj) {
+        int oddDegree = 0;
+        for (int i = 0; i < adj.size(); i++) {
+            if (adj.get(i).size() % 2 != 0)
+                oddDegree++;
+        }
+
+        // Eulerian Path exists if 0 or 2 vertices have odd degree
+        // Eulerian Circuit exists if all vertices have even degree
+        return (oddDegree == 0 || oddDegree == 2);
+    }
+}`, 
+
+      python: `def has_eulerian_path_or_circuit_undirected(graph):
+    odd_degree = 0
+    for node in graph:
+        if len(graph[node]) % 2 != 0:
+            odd_degree += 1
+    return odd_degree == 0 or odd_degree == 2`,
+      
+      cpp: `#include <bits/stdc++.h>
+using namespace std;
+
+bool hasEulerianPathOrCircuitUndirected(const vector<vector<int>>& adj) {
+    int oddDegree = 0;
+    for (int i = 0; i < adj.size(); i++) {
+        if (adj[i].size() % 2 != 0)
+            oddDegree++;
+    }
+    return (oddDegree == 0 || oddDegree == 2);
+}`, 
+
+      javascript: `function hasEulerianPathOrCircuitUndirected(adj) {
+    let oddDegree = 0;
+    for (let i = 0; i < adj.length; i++) {
+        if (adj[i].length % 2 !== 0) oddDegree++;
+    }
+    return oddDegree === 0 || oddDegree === 2;
+}`,
+
+      go: `package main
+
+import "fmt"
+
+func HasEulerianPathOrCircuitUndirected(adj map[int][]int) bool {
+	oddDegree := 0
+	for _, neighbors := range adj {
+		if len(neighbors)%2 != 0 {
+			oddDegree++
+		}
+	}
+	return oddDegree == 0 || oddDegree == 2
+}
+
+func main() {
+	graph := map[int][]int{
+		0: {1, 2},
+		1: {0, 2},
+		2: {0, 1},
+	}
+	fmt.Println("Has Eulerian Path or Circuit:", HasEulerianPathOrCircuitUndirected(graph))
+}`,
+    },
+
+    bfs: {
+      java: `import java.util.*;
+
+public class EulerUndirectedBFS {
+    public static boolean hasEulerianPathOrCircuit(ArrayList<ArrayList<Integer>> adj) {
+        int n = adj.size();
+        boolean[] visited = new boolean[n];
+
+        int start = -1;
+        for (int i = 0; i < n; i++) {
+            if (!adj.get(i).isEmpty()) {
+                start = i;
+                break;
+            }
+        }
+        if (start == -1) return true;
+
+        Queue<Integer> q = new LinkedList<>();
+        q.offer(start);
+        visited[start] = true;
+
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            for (int neighbor : adj.get(node)) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    q.offer(neighbor);
+                }
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            if (!adj.get(i).isEmpty() && !visited[i])
+                return false;
+        }
+
+        int odd = 0;
+        for (int i = 0; i < n; i++) {
+            if (adj.get(i).size() % 2 != 0) odd++;
+        }
+        return (odd == 0 || odd == 2);
+    }
+}`,
+      
+      python: `from collections import deque
+
+def has_eulerian_path_or_circuit_undirected_bfs(graph):
+    visited = set()
+    start = next((node for node in graph if graph[node]), None)
+    if not start:
+        return True
+
+    q = deque([start])
+    visited.add(start)
+
+    while q:
+        node = q.popleft()
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                q.append(neighbor)
+
+    if any(len(graph[node]) > 0 and node not in visited for node in graph):
+        return False
+
+    odd = sum(1 for node in graph if len(graph[node]) % 2 != 0)
+    return odd == 0 or odd == 2`,
+    },
+  },
+
+  directed: {
+    dfs: {
+      java: `import java.util.*;
+
+public class EulerDirectedDFS {
+    public static boolean hasEulerianPathOrCircuit(ArrayList<ArrayList<Integer>> adj) {
+        int n = adj.size();
+        int[] inDeg = new int[n];
+        int[] outDeg = new int[n];
+
+        for (int u = 0; u < n; u++) {
+            for (int v : adj.get(u)) {
+                outDeg[u]++;
+                inDeg[v]++;
+            }
+        }
+
+        int startNodes = 0, endNodes = 0;
+        for (int i = 0; i < n; i++) {
+            if (outDeg[i] - inDeg[i] == 1) startNodes++;
+            else if (inDeg[i] - outDeg[i] == 1) endNodes++;
+            else if (Math.abs(inDeg[i] - outDeg[i]) > 1) return false;
+        }
+
+        return (startNodes == 0 && endNodes == 0) || (startNodes == 1 && endNodes == 1);
+    }
+}`, 
+
+      python: `def has_eulerian_path_or_circuit_directed(graph):
+    in_deg = {node: 0 for node in graph}
+    out_deg = {node: 0 for node in graph}
+
+    for u in graph:
+        for v in graph[u]:
+            out_deg[u] += 1
+            in_deg[v] += 1
+
+    start_nodes = sum(out_deg[n] - in_deg[n] == 1 for n in graph)
+    end_nodes = sum(in_deg[n] - out_deg[n] == 1 for n in graph)
+
+    return (start_nodes == 0 and end_nodes == 0) or (start_nodes == 1 and end_nodes == 1)`,
+      
+      cpp: `#include <bits/stdc++.h>
+using namespace std;
+
+bool hasEulerianPathOrCircuitDirected(const vector<vector<int>>& adj) {
+    int n = adj.size();
+    vector<int> inDeg(n, 0), outDeg(n, 0);
+
+    for (int u = 0; u < n; u++) {
+        for (int v : adj[u]) {
+            outDeg[u]++;
+            inDeg[v]++;
+        }
+    }
+
+    int start = 0, end = 0;
+    for (int i = 0; i < n; i++) {
+        if (outDeg[i] - inDeg[i] == 1) start++;
+        else if (inDeg[i] - outDeg[i] == 1) end++;
+        else if (abs(inDeg[i] - outDeg[i]) > 1) return false;
+    }
+    return (start == 0 && end == 0) || (start == 1 && end == 1);
+}`, 
+
+      javascript: `function hasEulerianPathOrCircuitDirected(adj) {
+    const n = adj.length;
+    const inDeg = new Array(n).fill(0);
+    const outDeg = new Array(n).fill(0);
+
+    for (let u = 0; u < n; u++) {
+        for (const v of adj[u]) {
+            outDeg[u]++;
+            inDeg[v]++;
+        }
+    }
+
+    let start = 0, end = 0;
+    for (let i = 0; i < n; i++) {
+        if (outDeg[i] - inDeg[i] === 1) start++;
+        else if (inDeg[i] - outDeg[i] === 1) end++;
+        else if (Math.abs(inDeg[i] - outDeg[i]) > 1) return false;
+    }
+
+    return (start === 0 && end === 0) || (start === 1 && end === 1);
+}`,
+
+      go: `package main
+
+import "fmt"
+
+func HasEulerianPathOrCircuitDirected(adj map[int][]int) bool {
+	inDeg := make(map[int]int)
+	outDeg := make(map[int]int)
+
+	for u := range adj {
+		for _, v := range adj[u] {
+			outDeg[u]++
+			inDeg[v]++
+		}
+	}
+
+	start, end := 0, 0
+	for node := range adj {
+		diff := outDeg[node] - inDeg[node]
+		if diff == 1 {
+			start++
+		} else if diff == -1 {
+			end++
+		} else if diff > 1 || diff < -1 {
+			return false
+		}
+	}
+
+	return (start == 0 && end == 0) || (start == 1 && end == 1)
+}
+
+func main() {
+	graph := map[int][]int{
+		0: {1},
+		1: {2},
+		2: {0},
+	}
+	fmt.Println("Has Eulerian Path or Circuit:", HasEulerianPathOrCircuitDirected(graph))
+}`,
+    },
+
+    bfs: {
+      java: `import java.util.*;
+
+public class EulerDirectedBFS {
+    public static boolean hasEulerianPathOrCircuit(ArrayList<ArrayList<Integer>> adj) {
+        int n = adj.size();
+        int[] inDeg = new int[n];
+        int[] outDeg = new int[n];
+
+        for (int u = 0; u < n; u++) {
+            for (int v : adj.get(u)) {
+                outDeg[u]++;
+                inDeg[v]++;
+            }
+        }
+
+        // Check connectivity using BFS (ignoring direction)
+        boolean[] visited = new boolean[n];
+        int start = -1;
+        for (int i = 0; i < n; i++) {
+            if (!adj.get(i).isEmpty()) { start = i; break; }
+        }
+        if (start == -1) return true;
+
+        Queue<Integer> q = new LinkedList<>();
+        q.offer(start);
+        visited[start] = true;
+
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            for (int nei : adj.get(node)) {
+                if (!visited[nei]) {
+                    visited[nei] = true;
+                    q.offer(nei);
+                }
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            if (!adj.get(i).isEmpty() && !visited[i])
+                return false;
+        }
+
+        int startNodes = 0, endNodes = 0;
+        for (int i = 0; i < n; i++) {
+            if (outDeg[i] - inDeg[i] == 1) startNodes++;
+            else if (inDeg[i] - outDeg[i] == 1) endNodes++;
+            else if (Math.abs(inDeg[i] - outDeg[i]) > 1) return false;
+        }
+        return (startNodes == 0 && endNodes == 0) || (startNodes == 1 && endNodes == 1);
+    }
+}`,
+      
+      python: `from collections import deque
+
+def has_eulerian_path_or_circuit_directed_bfs(graph):
+    in_deg = {n: 0 for n in graph}
+    out_deg = {n: 0 for n in graph}
+
+    for u in graph:
+        for v in graph[u]:
+            out_deg[u] += 1
+            in_deg[v] += 1
+
+    # BFS for weak connectivity (ignore direction)
+    visited = set()
+    start = next((n for n in graph if graph[n]), None)
+    if not start: return True
+
+    q = deque([start])
+    visited.add(start)
+
+    while q:
+        node = q.popleft()
+        for nei in graph[node]:
+            if nei not in visited:
+                visited.add(nei)
+                q.append(nei)
+
+    for n in graph:
+        if len(graph[n]) > 0 and n not in visited:
+            return False
+
+    start_nodes = sum(out_deg[n] - in_deg[n] == 1 for n in graph)
+    end_nodes = sum(in_deg[n] - out_deg[n] == 1 for n in graph)
+
+    return (start_nodes == 0 and end_nodes == 0) or (start_nodes == 1 and end_nodes == 1)`,
+    },
+  },
+};
+
+
+
+
 export const graphAlgorithms = {
   bfs: {
     java: `public static void BFS(ArrayList<ArrayList<Integer>> adj, int start) {
